@@ -12,10 +12,7 @@ b,h1,h2,h4,h3,p,ul{
 div.container{
   border:1px solid black;
   display:grid;
-  height:960px;
-  width:960px;
-  grid-template-columns:repeat(16, 1fr);
-  grid-template-rows:repeat(16, 1fr);
+
 }
 div.box{
   border:1px solid black;
