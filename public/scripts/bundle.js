@@ -15447,7 +15447,24 @@ module.exports = g;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+//create divItem globally so we can use it whenever. If we don't include this, it will only live in the for loop function
+var divItem = void 0;
 
+//create a divContainer Element;
+var divContainer = document.createElement("div");
+divContainer.classList.add("container");
+
+//append the divContainer to our body element in our html
+document.querySelector("body").appendChild(divContainer);
+
+//set the width and heights of our div.container. We can only access our divContainer once its appended to the DOM.
+divContainer.setAttribute("style", "width:200px");
+divContainer.setAttribute("style", "height:700px");
+divContainer.style.border = "1px solid black";
+
+//set the gridTemplateColumns and rows of the divContainer
+divContainer.style.gridTemplateColumns = "repeat(16,1fr)";
+divContainer.style.gridTemplateRow = "repeat(16,1fr)";
 
 //return random rgb in correct format ex 43,54,87
 var returnRandomRGB = function returnRandomRGB() {
@@ -15464,8 +15481,8 @@ var returnRandomRGB = function returnRandomRGB() {
   return numbers;
 };
 
-//create 256 div items in order to go inside a divContainer Element
-var createGrid = function createGrid(totalNumber, color) {
+//function that creates certain number of grid items  inside a divContainer Element.Also, takes in the color that you want
+var createSetGrid = function createSetGrid(totalNumber, color) {
   for (var i = 1; i <= totalNumber; i++) {
     divItem = document.createElement("div");
     //class names shouldnt begin with a number. Should begin with a letter, underscore or a hypen. We created class of box to give border to the box in css
@@ -15482,7 +15499,7 @@ var createGrid = function createGrid(totalNumber, color) {
         this.classList.add("selected");
         //if this divItem already has a class of selected
       } else {
-        //removes background-color of none when we move over it, so we get rid of green
+        //add a background-color of white when we move over it, so we get rid of green
         this.setAttribute("style", "background-color:none");
         //remove selected class, so we know its not selected
         this.classList.remove("selected");
@@ -15493,12 +15510,68 @@ var createGrid = function createGrid(totalNumber, color) {
         });
       }
     });
+    //append this divItem to the divContainer
+    divContainer.appendChild(divItem);
   }
-  //append this divItem to the divContainer
-  divContainer.appendChild(divItem);
+};
+
+//create a new grid based on user input
+var createDynamicGrid = function createDynamicGrid() {
+  //ask the user how many squares per side they want and store that string value in squaresPerSide variable
+  var squaresPerSide = +prompt("how many squares per side to make new grid?.Max is 50");
+  //if +prompt can turn that string value into a number, then that means the user didn't enter a number, so we run makeNewGrid from the start until the user enters a number
+  if (!squaresPerSide || squaresPerSide > 50) {
+    createDynamicGrid();
+    //if user entered a valid number
+  } else {
+    //remove everything from inside the divContainer, so we can recreate new columns and grids. We could also forEach every divItem to remove each one
+    divContainer.innerHTML = "";
+    //set new the gridtemplatecolumns and grid template rows
+    divContainer.style.gridTemplateColumns = "repeat(" + squaresPerSide + ",1fr)";
+    divContainer.style.gridTemplateRow = "repeat(" + squaresPerSide + ",1fr)";
+  }
+
+  createSetGrid(squaresPerSide * squaresPerSide, "blue");
+};
+
+/*
+//change color of grid
+const buttonGridColor=(color)=>{
+  const allDivItems=document.querySelectorAll("div.box");
+  allDivItems.forEach((divItem)=>{
+    divItem.addEventListener("mouseover",function(e){
+      changeGridColor(divItem,color);
+    })
+  })
+}
+*/
+//function that changes the background color of each div when mouse goes over it
+var changeItemColor = function changeItemColor(color) {
+  var allDivItems = document.querySelectorAll("div.box");
+  allDivItems.forEach(function (divItem) {
+
+    divItem.addEventListener("mouseover", function (e) {
+      var _this2 = this;
+
+      //so the first mouseover event says if not selected, add a class of selected and make background-color green. That runs first. then this mouseover event runs immediately after. It sees that the current divItem already has a class of selected due to the first mouse over event, and it  just changes the divItem background-color to red.
+      if (this.classList.contains("selected")) {
+        this.setAttribute("style", "background-color:" + color);
+        //the first mouseover event says if it is selected, remove the class of selected and make background-color nothing. That runs first. this mouseover event runs immedaitely after. it sees that the current divItem already doesnt have a class of selected. but there are no rules applies in this event, so it keeps the background-color of none.
+      } else {
+        this.addEventListener("click", function (e) {
+          _this2.setAttribute("style", "background-color:" + color);
+          _this2.classList.add("selected");
+        });
+      }
+    });
+  });
 };
 
 exports.returnRandomRGB = returnRandomRGB;
+exports.createSetGrid = createSetGrid;
+exports.divContainer = divContainer;
+exports.changeItemColor = changeItemColor;
+exports.createDynamicGrid = createDynamicGrid;
 
 /***/ }),
 
@@ -15514,106 +15587,57 @@ exports.returnRandomRGB = returnRandomRGB;
 
 var _functions = __webpack_require__(/*! ./functions.js */ "./source/functions.js");
 
-//create divItem globally so we can use it whenever. If we don't include this, it will only live in the for loop function
-var divItem = void 0;
+var squaresPerSide = void 0;
 
-//create a divContainer Element;
-var divContainer = document.createElement("div");
-divContainer.classList.add("container");
+//create a make new grid button element;
+var makeNewGridButton = document.createElement("button");
+makeNewGridButton.textContent = "Make New Grid";
 
-//append the divContainer to our body element in our html
-document.querySelector("body").appendChild(divContainer);
+//create a clear grid button
+var clearGridButton = document.createElement("button");
+clearGridButton.textContent = "Clear Grid";
 
-//set the width and heights of our div.container. We can only access our divContainer once its appended to the DOM.
-divContainer.setAttribute("style", "width:960px");
-divContainer.setAttribute("style", "height:960px");
+//reference to random color button in html
+var randomColorButton = document.querySelector("#red_color");
 
-//set the gridTemplateColumns and rows of the divContainer
-divContainer.style.gridTemplateColumns = "repeat(16,1fr)";
-divContainer.style.gridTemplateRow = "repeat(16,1fr)";
+//append the button elements to our bodyElement, before the divContainer
+document.querySelector("body").insertBefore(makeNewGridButton, randomColorButton);
+document.querySelector("body").insertBefore(clearGridButton, makeNewGridButton);
 
-//create a button element;
-var button = document.createElement("button");
-button.textContent = "Clear Grid";
+//run createSetGrid fuction with 256 grid items and the color green;
+(0, _functions.createSetGrid)(256, "green");
 
-//create 256 div items in order to go inside a divContainer Element
-for (var i = 1; i <= 256; i++) {
-  divItem = document.createElement("div");
-  //class names shouldnt begin with a number. Should begin with a letter, underscore or a hypen. We created class of box to give border to the box in css
-  divItem.classList.add("_" + i, "box");
-  //add a mouseover event for each divItem. If mouseover is fired, add a style attribute to "this" div that we have the event listener on , divItem. It will be added to each and every divItem element. If we want to be specific about adding attributes to specific classes of a certain element,, we have to first see if that element contains the class so and so using classList.contains() and if it does, then we run a function that adds a style to that specific element. We have to use "this" keyword to address the divItem we are talking about. And remember, we can't use this with arrow functions unless the arrow function has a this value from its parent.
-  divItem.addEventListener("mouseover", function (e) {
-    var _this = this;
-
-    //if this divItem does not have a class of selected
-    if (!this.classList.contains("selected")) {
-      //add a background-color of green when a mouse moves over that div
-      this.setAttribute("style", "background-color:green");
-      //also add a class of selected,so we know its already been selected
-      this.classList.add("selected");
-      //if this divItem already has a class of selected
-    } else {
-      //add a background-color of white when we move over it, so we get rid of green
-      this.setAttribute("style", "background-color:none");
-      //remove selected class, so we know its not selected
-      this.classList.remove("selected");
-      //when selected class is removed, lets also add a click event listener, that allows us to click that div(which doesnt have a selected class) and make it green background.Lets also give it a class of selected so when we mouseover it again, it changes to white because it already has a class of selected
-      this.addEventListener("click", function (e) {
-        _this.setAttribute("style", "background-color:green");
-        _this.classList.add("selected");
-      });
-    }
-  });
-
-  //append this divItem to the divContainer
-  divContainer.appendChild(divItem);
-}
-
-//append the button element to our bodyElement, before the divContainer
-document.querySelector("body").insertBefore(button, divContainer);
-
-//event listener on button element
-button.addEventListener("click", function (e) {
+//event listener on makeNewGridButton element
+makeNewGridButton.addEventListener("click", function (e) {
   //select all the divItem elements that have a class of box using document.querySelectorAll and the class of the items we want to select.This ends up selecting all the divItems because they all have a class of box.But if one of the divItem elements didnt have a class of box, it wouldn't be selected.  Dynamically created elements like divItem and divContainer have to be appended to our DOM before being able to retrieve it from the DOM with a class or id selector
   var allDivItems = document.querySelectorAll("div.box");
   //for each box, if it contains the class, color,  Remove that style attribute. If we only removethe class name of color, the attribute will still be there because it is applied todivItem as a whole, not to a specific class.
   allDivItems.forEach(function (divItem) {
     divItem.removeAttribute("style");
   });
-  makeNewGrid();
+  (0, _functions.createDynamicGrid)();
 });
 
-//prompt user
-var makeNewGrid = function makeNewGrid() {
-  //ask the user how many squares per side they want and store that string value in squaresPerSide variable
-  var squaresPerSide = +prompt("how many squares per side to make new grid?.Max is 50");
-  //if +prompt can turn that string value into a number, then that means the user didn't enter a number, so we run makeNewGrid from the start until the user enters a number
-  if (!squaresPerSide || squaresPerSide > 50) {
-    makeNewGrid();
-    //if user entered a valid number
-  } else {
-    //remove everything from inside the divContainer, so we can recreate new columns and grids. We could also forEach every divItem to remove each one
-    divContainer.innerHTML = "";
-    //set new the gridtemplatecolumns and grid template rows
-    divContainer.style.gridTemplateColumns = "repeat(" + squaresPerSide + ",1fr)";
-    divContainer.style.gridTemplateRow = "repeat(" + squaresPerSide + ",1fr)";
-  }
+//event listener on red ColorButton
+randomColorButton.addEventListener("click", function (e) {
+  console.log(e.target);
+  (0, _functions.changeItemColor)(e.target.innerHTML);
+});
 
-  //now this new code creates a new divItem from 1 up until squaresPerSide*squaresPerSide to fill up the new grid inside divContainer
-  for (var _i = 1; _i <= Math.pow(squaresPerSide, 2); _i++) {
-    var _divItem = document.createElement("div");
-    //still give each divItem a class of box, because the box class has a border around it
-    _divItem.classList.add("box");
-    _divItem.addEventListener("mouseover", function (e) {
-      this.setAttribute("style", "background-color:green");
-    });
-    divContainer.appendChild(_divItem);
-  }
-};
+//event listener on random color buttob
+document.querySelector("#random").addEventListener("click", function (e) {
+  (0, _functions.changeItemColor)("rgb(" + (0, _functions.returnRandomRGB)() + ")");
+});
 
-//function that returns a random color
-document.querySelector("#random_color").addEventListener("click", function (e) {
-  console.log((0, _functions.returnRandomRGB)());
+//event listener of clear grid button
+clearGridButton.addEventListener("click", function (e) {
+  var allDivItems = document.querySelectorAll("div.box");
+  allDivItems.forEach(function (divItem) {
+    divItem.removeAttribute("style");
+  });
+});
+window.addEventListener("dblclick", function (e) {
+  throw new error();
 });
 
 /***/ }),

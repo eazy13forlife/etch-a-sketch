@@ -1,3 +1,21 @@
+//create divItem globally so we can use it whenever. If we don't include this, it will only live in the for loop function
+let divItem;
+
+//create a divContainer Element;
+let divContainer=document.createElement("div");
+divContainer.classList.add("container")
+
+  //append the divContainer to our body element in our html
+  document.querySelector("body").appendChild(divContainer);
+
+  //set the width and heights of our div.container. We can only access our divContainer once its appended to the DOM.
+  divContainer.setAttribute("style","width:200px")
+  divContainer.setAttribute("style","height:700px")
+  divContainer.style.border="1px solid black"
+
+  //set the gridTemplateColumns and rows of the divContainer
+  divContainer.style.gridTemplateColumns="repeat(16,1fr)";
+  divContainer.style.gridTemplateRow="repeat(16,1fr)";
 
 
 
@@ -16,8 +34,9 @@ const returnRandomRGB=()=>{
 return numbers;
 }
 
-//create 256 div items in order to go inside a divContainer Element
-const createGrid=(totalNumber,color)=>{
+
+//function that creates certain number of grid items  inside a divContainer Element.Also, takes in the color that you want
+const createSetGrid=(totalNumber,color)=>{
   for(let i=1;i<=totalNumber;i++){
     divItem=document.createElement("div");
     //class names shouldnt begin with a number. Should begin with a letter, underscore or a hypen. We created class of box to give border to the box in css
@@ -32,7 +51,7 @@ const createGrid=(totalNumber,color)=>{
         this.classList.add("selected")
     //if this divItem already has a class of selected
     }else{
-        //removes background-color of none when we move over it, so we get rid of green
+        //add a background-color of white when we move over it, so we get rid of green
         this.setAttribute("style","background-color:none");
         //remove selected class, so we know its not selected
         this.classList.remove("selected");
@@ -43,19 +62,62 @@ const createGrid=(totalNumber,color)=>{
         })
     }
     })
+    //append this divItem to the divContainer
+    divContainer.appendChild(divItem);
   }
-  //append this divItem to the divContainer
-  divContainer.appendChild(divItem);
 }
 
 
 
+//create a new grid based on user input
+const createDynamicGrid=()=>{
+  //ask the user how many squares per side they want and store that string value in squaresPerSide variable
+  const squaresPerSide=+prompt("how many squares per side to make new grid?.Max is 50")
+  //if +prompt can turn that string value into a number, then that means the user didn't enter a number, so we run makeNewGrid from the start until the user enters a number
+  if(!squaresPerSide||squaresPerSide>50){
+    createDynamicGrid();
+  //if user entered a valid number
+  }else{
+    //remove everything from inside the divContainer, so we can recreate new columns and grids. We could also forEach every divItem to remove each one
+    divContainer.innerHTML=""
+    //set new the gridtemplatecolumns and grid template rows
+    divContainer.style.gridTemplateColumns=`repeat(${squaresPerSide},1fr)`;
+    divContainer.style.gridTemplateRow=`repeat(${squaresPerSide},1fr)`;
+  }
+
+  createSetGrid((squaresPerSide*squaresPerSide),"blue");
+}
+
+/*
+//change color of grid
+const buttonGridColor=(color)=>{
+  const allDivItems=document.querySelectorAll("div.box");
+  allDivItems.forEach((divItem)=>{
+    divItem.addEventListener("mouseover",function(e){
+      changeGridColor(divItem,color);
+    })
+  })
+}
+*/
+//function that changes the background color of each div when mouse goes over it
+const changeItemColor=(color)=>{
+  const allDivItems=document.querySelectorAll("div.box");
+  allDivItems.forEach((divItem)=>{
+
+    divItem.addEventListener("mouseover",function(e){
+      //so the first mouseover event says if not selected, add a class of selected and make background-color green. That runs first. then this mouseover event runs immediately after. It sees that the current divItem already has a class of selected due to the first mouse over event, and it  just changes the divItem background-color to red.
+      if(this.classList.contains("selected")){
+        this.setAttribute("style",`background-color:${color}`);
+      //the first mouseover event says if it is selected, remove the class of selected and make background-color nothing. That runs first. this mouseover event runs immedaitely after. it sees that the current divItem already doesnt have a class of selected. but there are no rules applies in this event, so it keeps the background-color of none.
+      }else{
+        this.addEventListener("click",(e)=>{
+          this.setAttribute("style",`background-color:${color}`);
+          this.classList.add("selected")
+        })
+      }
+    });
+  });
+}
 
 
-
-
-
-
-
-
-export{returnRandomRGB};
+export{returnRandomRGB,createSetGrid,divContainer,changeItemColor,createDynamicGrid}
