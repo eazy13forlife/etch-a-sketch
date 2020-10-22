@@ -1,24 +1,7 @@
+import{divContainer} from "./inlinecss.js"
+
 //create divItem globally so we can use it whenever. If we don't include this, it will only live in the for loop function
 let divItem;
-
-//create a divContainer Element;
-let divContainer=document.createElement("div");
-divContainer.classList.add("container")
-
-  //append the divContainer to our body element in our html
-  document.querySelector("body").appendChild(divContainer);
-
-  //set the width and heights of our div.container. We can only access our divContainer once its appended to the DOM.
-  divContainer.style.width=" 700px"
-  divContainer.setAttribute("style","height:700px")
-  divContainer.style.border="5px solid black";
-  divContainer.style.margin="1em auto 1em auto";
-
-  //set the gridTemplateColumns and rows of the divContainer
-  divContainer.style.gridTemplateColumns="repeat(16,1fr)";
-  divContainer.style.gridTemplateRow="repeat(16,1fr)";
-
-
 
 //return random rgb in correct format ex 43,54,87
 const returnRandomRGB=()=>{

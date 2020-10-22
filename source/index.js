@@ -1,26 +1,12 @@
-import{returnRandomRGB,createSetGrid,divContainer,buttonGridColor,changeItemColor,createDynamicGrid} from "./functions.js"
+import{returnRandomRGB,createSetGrid,divContainer,changeItemColor,createDynamicGrid} from "./functions.js"
+import{randomColorButton,makeNewGridButton,clearGridButton} from "./inlinecss.js"
 
 let squaresPerSide;
 
-//create a make new grid button element;
-const makeNewGridButton=document.createElement("button");
-makeNewGridButton.textContent="Make New Grid";
-
-//create a clear grid button
-const clearGridButton=document.createElement("button");
-clearGridButton.textContent="Clear Grid";
-
-
-//reference to random color button in html
-const randomColorButton=document.querySelector("#red_color")
-
-//append the button elements to our bodyElement, before the divContainer
-document.querySelector("#button_containers").appendChild(makeNewGridButton);
-document.querySelector("#button_containers").appendChild(clearGridButton);
-//run createSetGrid fuction with 256 grid items and the color green;
+//from the getgo, run createSetGrid fuction with 256 grid items and the color green;
 createSetGrid(256,"green");
 
-//event listener on makeNewGridButton element
+//event listener for makeNewGridButton element
 makeNewGridButton.addEventListener("click",(e)=>{
   //select all the divItem elements that have a class of box using document.querySelectorAll and the class of the items we want to select.This ends up selecting all the divItems because they all have a class of box.But if one of the divItem elements didnt have a class of box, it wouldn't be selected.  Dynamically created elements like divItem and divContainer have to be appended to our DOM before being able to retrieve it from the DOM with a class or id selector
   const allDivItems=document.querySelectorAll("div.box");
@@ -32,7 +18,7 @@ makeNewGridButton.addEventListener("click",(e)=>{
 });
 
 
-//event listener on red ColorButton
+//event listener for red ColorButton
 randomColorButton.addEventListener("click",(e)=>{
   console.log(e.target)
   changeItemColor(e.target.innerHTML)
@@ -43,7 +29,7 @@ document.querySelector("#random").addEventListener("click",(e)=>{
   changeItemColor(`rgb(${returnRandomRGB()})`)
 })
 
-//event listener of clear grid button
+//event listener for clear grid button
 clearGridButton.addEventListener("click",(e)=>{
   const allDivItems=document.querySelectorAll("div.box")
   allDivItems.forEach((divItem)=>{

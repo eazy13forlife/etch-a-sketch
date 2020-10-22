@@ -15447,25 +15447,12 @@ module.exports = g;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.createDynamicGrid = exports.changeItemColor = exports.divContainer = exports.createSetGrid = exports.returnRandomRGB = undefined;
+
+var _inlinecss = __webpack_require__(/*! ./inlinecss.js */ "./source/inlinecss.js");
+
 //create divItem globally so we can use it whenever. If we don't include this, it will only live in the for loop function
 var divItem = void 0;
-
-//create a divContainer Element;
-var divContainer = document.createElement("div");
-divContainer.classList.add("container");
-
-//append the divContainer to our body element in our html
-document.querySelector("body").appendChild(divContainer);
-
-//set the width and heights of our div.container. We can only access our divContainer once its appended to the DOM.
-divContainer.style.width = " 700px";
-divContainer.setAttribute("style", "height:700px");
-divContainer.style.border = "5px solid black";
-divContainer.style.margin = "1em auto 1em auto";
-
-//set the gridTemplateColumns and rows of the divContainer
-divContainer.style.gridTemplateColumns = "repeat(16,1fr)";
-divContainer.style.gridTemplateRow = "repeat(16,1fr)";
 
 //return random rgb in correct format ex 43,54,87
 var returnRandomRGB = function returnRandomRGB() {
@@ -15512,7 +15499,7 @@ var createSetGrid = function createSetGrid(totalNumber, color) {
       }
     });
     //append this divItem to the divContainer
-    divContainer.appendChild(divItem);
+    _inlinecss.divContainer.appendChild(divItem);
   }
 };
 
@@ -15526,10 +15513,10 @@ var createDynamicGrid = function createDynamicGrid() {
     //if user entered a valid number
   } else {
     //remove everything from inside the divContainer, so we can recreate new columns and grids. We could also forEach every divItem to remove each one
-    divContainer.innerHTML = "";
+    _inlinecss.divContainer.innerHTML = "";
     //set new the gridtemplatecolumns and grid template rows
-    divContainer.style.gridTemplateColumns = "repeat(" + squaresPerSide + ",1fr)";
-    divContainer.style.gridTemplateRow = "repeat(" + squaresPerSide + ",1fr)";
+    _inlinecss.divContainer.style.gridTemplateColumns = "repeat(" + squaresPerSide + ",1fr)";
+    _inlinecss.divContainer.style.gridTemplateRow = "repeat(" + squaresPerSide + ",1fr)";
   }
 
   createSetGrid(squaresPerSide * squaresPerSide, "blue");
@@ -15570,7 +15557,7 @@ var changeItemColor = function changeItemColor(color) {
 
 exports.returnRandomRGB = returnRandomRGB;
 exports.createSetGrid = createSetGrid;
-exports.divContainer = divContainer;
+exports.divContainer = _inlinecss.divContainer;
 exports.changeItemColor = changeItemColor;
 exports.createDynamicGrid = createDynamicGrid;
 
@@ -15588,8 +15575,81 @@ exports.createDynamicGrid = createDynamicGrid;
 
 var _functions = __webpack_require__(/*! ./functions.js */ "./source/functions.js");
 
+var _inlinecss = __webpack_require__(/*! ./inlinecss.js */ "./source/inlinecss.js");
+
 var squaresPerSide = void 0;
 
+//from the getgo, run createSetGrid fuction with 256 grid items and the color green;
+(0, _functions.createSetGrid)(256, "green");
+
+//event listener for makeNewGridButton element
+_inlinecss.makeNewGridButton.addEventListener("click", function (e) {
+  //select all the divItem elements that have a class of box using document.querySelectorAll and the class of the items we want to select.This ends up selecting all the divItems because they all have a class of box.But if one of the divItem elements didnt have a class of box, it wouldn't be selected.  Dynamically created elements like divItem and divContainer have to be appended to our DOM before being able to retrieve it from the DOM with a class or id selector
+  var allDivItems = document.querySelectorAll("div.box");
+  //for each box, if it contains the class, color,  Remove that style attribute. If we only removethe class name of color, the attribute will still be there because it is applied todivItem as a whole, not to a specific class.
+  allDivItems.forEach(function (divItem) {
+    divItem.removeAttribute("style");
+  });
+  (0, _functions.createDynamicGrid)();
+});
+
+//event listener for red ColorButton
+_inlinecss.randomColorButton.addEventListener("click", function (e) {
+  console.log(e.target);
+  (0, _functions.changeItemColor)(e.target.innerHTML);
+});
+
+//event listener on random color buttob
+document.querySelector("#random").addEventListener("click", function (e) {
+  (0, _functions.changeItemColor)("rgb(" + (0, _functions.returnRandomRGB)() + ")");
+});
+
+//event listener for clear grid button
+_inlinecss.clearGridButton.addEventListener("click", function (e) {
+  var allDivItems = document.querySelectorAll("div.box");
+  allDivItems.forEach(function (divItem) {
+    divItem.removeAttribute("style");
+  });
+});
+window.addEventListener("dblclick", function (e) {
+  throw new error();
+});
+
+/***/ }),
+
+/***/ "./source/inlinecss.js":
+/*!*****************************!*\
+  !*** ./source/inlinecss.js ***!
+  \*****************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+
+//create a divContainer Element;
+var divContainer = document.createElement("div");
+divContainer.classList.add("container");
+
+//append the divContainer to our body element in our html
+document.querySelector("body").appendChild(divContainer);
+
+//set the width and heights of our div.container. We can only access our divContainer once its appended to the DOM.
+divContainer.style.width = " 700px";
+divContainer.setAttribute("style", "height:700px");
+divContainer.style.border = "5px solid black";
+divContainer.style.margin = "1em auto 1em auto";
+
+//set the gridTemplateColumns and rows of the divContainer
+divContainer.style.gridTemplateColumns = "repeat(16,1fr)";
+divContainer.style.gridTemplateRow = "repeat(16,1fr)";
+
+//create buttons for html page
 //create a make new grid button element;
 var makeNewGridButton = document.createElement("button");
 makeNewGridButton.textContent = "Make New Grid";
@@ -15604,41 +15664,11 @@ var randomColorButton = document.querySelector("#red_color");
 //append the button elements to our bodyElement, before the divContainer
 document.querySelector("#button_containers").appendChild(makeNewGridButton);
 document.querySelector("#button_containers").appendChild(clearGridButton);
-//run createSetGrid fuction with 256 grid items and the color green;
-(0, _functions.createSetGrid)(256, "green");
 
-//event listener on makeNewGridButton element
-makeNewGridButton.addEventListener("click", function (e) {
-  //select all the divItem elements that have a class of box using document.querySelectorAll and the class of the items we want to select.This ends up selecting all the divItems because they all have a class of box.But if one of the divItem elements didnt have a class of box, it wouldn't be selected.  Dynamically created elements like divItem and divContainer have to be appended to our DOM before being able to retrieve it from the DOM with a class or id selector
-  var allDivItems = document.querySelectorAll("div.box");
-  //for each box, if it contains the class, color,  Remove that style attribute. If we only removethe class name of color, the attribute will still be there because it is applied todivItem as a whole, not to a specific class.
-  allDivItems.forEach(function (divItem) {
-    divItem.removeAttribute("style");
-  });
-  (0, _functions.createDynamicGrid)();
-});
-
-//event listener on red ColorButton
-randomColorButton.addEventListener("click", function (e) {
-  console.log(e.target);
-  (0, _functions.changeItemColor)(e.target.innerHTML);
-});
-
-//event listener on random color buttob
-document.querySelector("#random").addEventListener("click", function (e) {
-  (0, _functions.changeItemColor)("rgb(" + (0, _functions.returnRandomRGB)() + ")");
-});
-
-//event listener of clear grid button
-clearGridButton.addEventListener("click", function (e) {
-  var allDivItems = document.querySelectorAll("div.box");
-  allDivItems.forEach(function (divItem) {
-    divItem.removeAttribute("style");
-  });
-});
-window.addEventListener("dblclick", function (e) {
-  throw new error();
-});
+exports.divContainer = divContainer;
+exports.randomColorButton = randomColorButton;
+exports.clearGridButton = clearGridButton;
+exports.makeNewGridButton = makeNewGridButton;
 
 /***/ }),
 
