@@ -9,9 +9,10 @@ divContainer.classList.add("container")
   document.querySelector("body").appendChild(divContainer);
 
   //set the width and heights of our div.container. We can only access our divContainer once its appended to the DOM.
-  divContainer.setAttribute("style","width:200px")
+  divContainer.style.width=" 700px"
   divContainer.setAttribute("style","height:700px")
-  divContainer.style.border="1px solid black"
+  divContainer.style.border="5px solid black";
+  divContainer.style.margin="1em auto 1em auto";
 
   //set the gridTemplateColumns and rows of the divContainer
   divContainer.style.gridTemplateColumns="repeat(16,1fr)";

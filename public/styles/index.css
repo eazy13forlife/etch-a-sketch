@@ -8,11 +8,16 @@ b,h1,h2,h4,h3,p,ul{
   margin:0px;
   padding:0px;
 }
+#button_containers{
+width:350px;
+margin:auto;
+display:flex;
+justify-content:space-between;
+}
 
 div.container{
-  border:1px solid black;
   display:grid;
-
+  width:700px;
 }
 div.box{
   border:1px solid black;

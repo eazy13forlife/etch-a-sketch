@@ -15,9 +15,8 @@ clearGridButton.textContent="Clear Grid";
 const randomColorButton=document.querySelector("#red_color")
 
 //append the button elements to our bodyElement, before the divContainer
-document.querySelector("body").insertBefore(makeNewGridButton,randomColorButton);
-document.querySelector("body").insertBefore(clearGridButton,makeNewGridButton)
-
+document.querySelector("#button_containers").appendChild(makeNewGridButton);
+document.querySelector("#button_containers").appendChild(clearGridButton);
 //run createSetGrid fuction with 256 grid items and the color green;
 createSetGrid(256,"green");
 

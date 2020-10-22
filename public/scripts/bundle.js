@@ -15458,9 +15458,10 @@ divContainer.classList.add("container");
 document.querySelector("body").appendChild(divContainer);
 
 //set the width and heights of our div.container. We can only access our divContainer once its appended to the DOM.
-divContainer.setAttribute("style", "width:200px");
+divContainer.style.width = " 700px";
 divContainer.setAttribute("style", "height:700px");
-divContainer.style.border = "1px solid black";
+divContainer.style.border = "5px solid black";
+divContainer.style.margin = "1em auto 1em auto";
 
 //set the gridTemplateColumns and rows of the divContainer
 divContainer.style.gridTemplateColumns = "repeat(16,1fr)";
@@ -15601,9 +15602,8 @@ clearGridButton.textContent = "Clear Grid";
 var randomColorButton = document.querySelector("#red_color");
 
 //append the button elements to our bodyElement, before the divContainer
-document.querySelector("body").insertBefore(makeNewGridButton, randomColorButton);
-document.querySelector("body").insertBefore(clearGridButton, makeNewGridButton);
-
+document.querySelector("#button_containers").appendChild(makeNewGridButton);
+document.querySelector("#button_containers").appendChild(clearGridButton);
 //run createSetGrid fuction with 256 grid items and the color green;
 (0, _functions.createSetGrid)(256, "green");
 
